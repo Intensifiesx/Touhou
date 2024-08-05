@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 public class Player : MonoBehaviour
 {
     public PlayerInput playerControls;
-    [SerializeField] private GameObject bulletObject;
+    [SerializeField] private GameObject playerBulletPrefab, bulletContainer;
     [SerializeField] private int bombCount, bombMax, healthCount, healthMax;
-    [SerializeField] private float speed = 8.0f, focusMultiplier = .5f;
+    [SerializeField] private float speed = 8.0f, focusMultiplier = .5f, shotDelay = 0.05f, shotVelocity = 100;
     Vector2 moveDirection = Vector2.zero;
     private InputAction move, fire, bomb, focus;
     private SpriteRenderer hitboxSprite;
     private float lastShot;
+    private ObjectPool<GameObject> bulletPool;
 
     void Start()
     {
@@ -25,6 +27,17 @@ public class Player : MonoBehaviour
         fire.Enable();
         bomb.Enable();
         focus.Enable();
+
+        bulletPool = new ObjectPool<GameObject>(() =>{
+            return Instantiate(playerBulletPrefab, bulletContainer.transform);
+        }, playerBullet => {
+            playerBullet.SetActive(true);
+        }, playerBullet => {
+            playerBullet.SetActive(false);
+        }, playerBullet => {
+            Destroy(playerBullet.gameObject);
+        }, true, 100, 100);
+
     }
 
     // Update is called once per frame
@@ -43,12 +56,20 @@ public class Player : MonoBehaviour
 
     void Fire()
     {
-        if (Time.time - lastShot < 0.5f)
+        if (Time.time - lastShot < shotDelay)
             return;
         lastShot = Time.time;
-        GameObject bullet = Instantiate(bulletObject, transform.position, Quaternion.identity);
-        bullet.AddComponent<Rigidbody2D>().GetComponent<Rigidbody2D>().AddForce(Vector2.up * 10, ForceMode2D.Impulse);
-        bullet.GetComponent<Rigidbody2D>().gravityScale = 0;
+        GameObject bullet = bulletPool.Get();
+        bullet.transform.position = transform.position;
+        bullet.transform.rotation = Quaternion.identity;
+
+        bullet.GetComponent<Rigidbody2D>().AddForce(Vector2.up * shotVelocity, ForceMode2D.Impulse);
+
+        bullet.GetComponent<PlayerBullet>().setPlayer(this);
+    }
+
+    public void DeleteBullet(GameObject targetBullet){
+        bulletPool.Release(targetBullet);
     }
 
     public void Bomb(InputAction.CallbackContext context)
