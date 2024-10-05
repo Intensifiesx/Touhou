@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using TMPro;
 public class Player : MonoBehaviour
 {
     public PlayerInput playerControls;
     [SerializeField] private GameObject playerBulletPrefab, bulletContainer;
     [SerializeField] private int bombCount, bombMax, healthCount, healthMax;
     [SerializeField] private float speed = 8.0f, focusMultiplier = .5f, shotDelay = 0.05f, shotVelocity = 100;
+    [SerializeField] private TMP_Text healthText, bombText;
     Vector2 moveDirection = Vector2.zero;
     private InputAction move, fire, bomb, focus;
     private SpriteRenderer hitboxSprite;
+    private GameObject bombHitbox;
     private float lastShot;
     private ObjectPool<GameObject> bulletPool;
 
     void Start()
     {
         hitboxSprite = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        bombHitbox = gameObject.transform.GetChild(2).gameObject;
         playerControls = new PlayerInput();
         move = playerControls.Player.Move;
         fire = playerControls.Player.Fire;
         bomb = playerControls.Player.Bomb;
         focus = playerControls.Player.Focus;
+        healthText.text = "Health: " + healthCount + "/" + healthMax;
+        bombText.text = "Bombs: " + bombCount + "/" + bombMax;
         move.Enable();
         fire.Enable();
         bomb.Enable();
@@ -65,7 +71,7 @@ public class Player : MonoBehaviour
 
         bullet.GetComponent<Rigidbody2D>().AddForce(Vector2.up * shotVelocity, ForceMode2D.Impulse);
 
-        bullet.GetComponent<PlayerBullet>().setPlayer(this);
+        bullet.GetComponent<PlayerBullet>().SetPlayer(this);
     }
 
     public void DeleteBullet(GameObject targetBullet){
@@ -76,8 +82,15 @@ public class Player : MonoBehaviour
     {
         if(context.started && bombCount > 0)
         {
-            //Bomb code
+            bombHitbox.SetActive(true);
+            bombCount --;
+            bombText.text = "Bombs: " + bombCount + "/" + bombMax;
+            StartCoroutine(ClearBomb());
         }
+    }
+    IEnumerator ClearBomb(){
+        yield return new WaitForSeconds(.1f);
+        bombHitbox.SetActive(false);
     }
 
     public void Focus(InputAction.CallbackContext context)
@@ -92,5 +105,10 @@ public class Player : MonoBehaviour
             speed = speed / focusMultiplier;
             hitboxSprite.enabled = false;
         }
+    }
+
+    public void Hit(){
+        healthCount --;
+        healthText.text = "Health: " + healthCount + "/" + healthMax;
     }
 }

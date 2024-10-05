@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet Deleter
+  - Enemy Bullet
+  - Player Bullet
+  - Enemy
+  - Player Health
+  - Player Bomb
   layers:
   - Default
   - TransparentFX
@@ -41,4 +46,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 232725123
+    locked: 0
+  - name: Player
+    uniqueID: 3743541073
+    locked: 0
+  - name: Bullets
+    uniqueID: 2627384963
     locked: 0

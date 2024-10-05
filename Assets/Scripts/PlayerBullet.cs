@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerBullet : MonoBehaviour
 {
     private Player player;
-    public void setPlayer(Player player){
+    public void SetPlayer(Player player){
         this.player = player;
     }
     void OnTriggerEnter2D(Collider2D col){
