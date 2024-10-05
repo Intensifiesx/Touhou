@@ -15,12 +15,14 @@ public class TestEnemy : Enemy
     }
     
     public override void Shoot(ObjectPool<GameObject> bulletPool, GameObject player){
+        // Middle bullet
         GameObject bullet = bulletPool.Get();
         bullet.transform.position = transform.position;
         bullet.transform.right = player.transform.position - bullet.transform.position;
         bullet.GetComponent<Rigidbody2D>().AddForce(Vector3.Normalize(bullet.transform.right) * shotVelocity, ForceMode2D.Impulse);
         bullet.GetComponent<EnemyBullet>().SetEnemy(this);
 
+        // Right bullet
         bullet = bulletPool.Get();
         bullet.transform.position = transform.position;
         bullet.transform.right = player.transform.position - bullet.transform.position;
@@ -28,6 +30,7 @@ public class TestEnemy : Enemy
         bullet.GetComponent<Rigidbody2D>().AddForce(Vector3.Normalize(bullet.transform.right) * shotVelocity, ForceMode2D.Impulse);
         bullet.GetComponent<EnemyBullet>().SetEnemy(this);
 
+        // Left bullet  
         bullet = bulletPool.Get();
         bullet.transform.position = transform.position;
         bullet.transform.right = player.transform.position - bullet.transform.position;

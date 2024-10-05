@@ -13,13 +13,13 @@ public abstract class Enemy : MonoBehaviour
     private ObjectPool<GameObject> bulletPool;
 
     private void Start(){ //Immediately sets the bullet pool up
-        bulletPool = new ObjectPool<GameObject>(() =>{
+        bulletPool = new ObjectPool<GameObject>(() =>{ // We have no bullets, so we want to create a new bullet
             return Instantiate(bulletPrefab, bulletContainer.transform);
-        }, bullet => {
+        }, bullet => { // GETTER(): If we have bullets, we want to set them to active
             bullet.SetActive(true);
-        }, bullet => {
+        }, bullet => { // RELEASE(): If we have bullets, we want to set them to inactive
             bullet.SetActive(false);
-        }, bullet => {
+        }, bullet => { // DESTROY(): If we have bullets, we want to destroy them 
             Destroy(bullet.gameObject);
         }, true, 100, 100);
     }
