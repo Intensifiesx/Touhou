@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-
 public class FailScreen : MonoBehaviour
 {
-    [SerializeField] private Button restartButton;
-
-    void Start()
+    public void Setup()
     {
-        restartButton.onClick.AddListener(RestartGame);
+        Time.timeScale = 0;
+        gameObject.SetActive(true);
     }
 
-    private void RestartGame()
+    public void RestartGame()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

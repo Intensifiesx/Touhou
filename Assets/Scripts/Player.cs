@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int bombCount, bombMax, healthCount, healthMax;
     [SerializeField] private float speed = 8.0f, focusMultiplier = .5f, shotDelay = 0.05f, shotVelocity = 100;
     [SerializeField] private TMP_Text healthText, bombText;
-    [SerializeField] private GameObject failScreen;
+    [SerializeField] private FailScreen failScreen;
     Vector2 moveDirection = Vector2.zero;
     private InputAction move, fire, bomb, focus;
     private SpriteRenderer hitboxSprite;
@@ -47,13 +47,14 @@ public class Player : MonoBehaviour
 
     }
 
+    public void GameOver()
+    {
+        failScreen.Setup();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (healthCount <= 0) {
-            Time.timeScale = 0;
-            failScreen.SetActive(true);
-        }
         moveDirection = move.ReadValue<Vector2>();
         // hold down the fire button to shoot
         if (fire.phase == InputActionPhase.Performed)
@@ -113,6 +114,10 @@ public class Player : MonoBehaviour
     }
 
     public void Hit(){
+        if(healthCount <= 0){
+            GameOver();
+            return;
+        }
         healthCount --;
         healthText.text = "Health: " + healthCount + "/" + healthMax;
     }
