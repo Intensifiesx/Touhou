@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using TMPro;
+using System;
 public class Player : MonoBehaviour
 {
     public PlayerInput playerControls;
     [SerializeField] private GameObject playerBulletPrefab, bulletContainer;
     [SerializeField] private int bombCount, bombMax, healthCount, healthMax;
     [SerializeField] private float speed = 8.0f, focusMultiplier = .5f, shotDelay = 0.05f, shotVelocity = 100;
-    [SerializeField] private TMP_Text healthText, bombText;
+    [SerializeField] private TMP_Text healthText, bombText, timerText;
     [SerializeField] private FailScreen failScreen;
     Vector2 moveDirection = Vector2.zero;
     private InputAction move, fire, bomb, focus;
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
     private GameObject bombHitbox;
     private float lastShot;
     private ObjectPool<GameObject> bulletPool;
+    private float timer = 0.0f;
+    bool isDead = false;
 
     void Start()
     {
@@ -30,6 +33,8 @@ public class Player : MonoBehaviour
         focus = playerControls.Player.Focus;
         healthText.text = "Health: " + healthCount + "/" + healthMax;
         bombText.text = "Bombs: " + bombCount + "/" + bombMax;
+        timerText.text = "Time: " + timer;
+        isDead = false;
         move.Enable();
         fire.Enable();
         bomb.Enable();
@@ -55,6 +60,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+        TimeSpan timeSpan = TimeSpan.FromSeconds(timer);
+        timerText.text = "Time: " + timeSpan.ToString("mm':'ss");
+        timer += Time.deltaTime;
         moveDirection = move.ReadValue<Vector2>();
         // hold down the fire button to shoot
         if (fire.phase == InputActionPhase.Performed)
@@ -115,6 +125,7 @@ public class Player : MonoBehaviour
 
     public void Hit(){
         if(healthCount < 1){
+            isDead = true;
             GameOver();
             return;
         }

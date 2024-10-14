@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: -551426223
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2c2e46903aa358044902aacf13272181, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b9172b3e2d63f614e8da4debcf6540a7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -112,6 +112,9 @@ MonoBehaviour:
   focusMultiplier: 0.35
   shotDelay: 0.05
   shotVelocity: 75
+  healthText: {fileID: 0}
+  bombText: {fileID: 0}
+  failScreen: {fileID: 0}
 --- !u!114 &2081858916170056894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,7 +276,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 2}
+    oldSize: {x: 1.55, y: 1.85}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
