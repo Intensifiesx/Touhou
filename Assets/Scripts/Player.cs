@@ -103,18 +103,18 @@ public class Player : MonoBehaviour
     {
         if(context.started)
         {
-            speed = speed * focusMultiplier;
+            speed *= focusMultiplier;
             hitboxSprite.enabled = true;
         }
         else if(context.canceled)
         {
-            speed = speed / focusMultiplier;
+            speed /= focusMultiplier;
             hitboxSprite.enabled = false;
         }
     }
 
     public void Hit(){
-        if(healthCount <= 0){
+        if(healthCount < 1){
             GameOver();
             return;
         }

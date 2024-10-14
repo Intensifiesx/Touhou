@@ -39,6 +39,7 @@ public abstract class Enemy : MonoBehaviour
     public virtual void Shoot(ObjectPool<GameObject> bulletPool, GameObject player){}
     
     public void DeleteBullet(GameObject targetBullet){ //Easier to understand phrasing of releasing from the bullet pool *disabling the bullet*
-        bulletPool.Release(targetBullet);
+        if (targetBullet.activeInHierarchy)
+            bulletPool.Release(targetBullet);
     }
 }
